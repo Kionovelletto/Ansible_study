@@ -1,0 +1,26 @@
+# Roteiro para estudar o ansible
+
+## Instalando o Ansible
+1_Install_Ansible.txt
+
+## Configurando um inventário
+2_inventory
+
+## Validar os acessos SSH do seu host ao servidores cadastrados no inventário
+ssh user@address_inventory
+
+# Caso for utilizar chave ssh:
+-Gerando par de chaves local:
+ssh-keygen
+
+- Copiando IDs para o servidor alvo
+ssh-copy-id <nome_host>
+
+## Teste de ping para seu host
+ansible localhost -m ping
+
+##  Teste de ping para todos os servidores do inventário
+ansible -i 2_inventory all -u $USER -k -m ping
+
+## Alguns templates de configuração
+/usr/lib/python3/dist-packages/ansible_test/config

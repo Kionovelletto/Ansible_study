@@ -1,0 +1,5 @@
+[webservers] # Range de endereços /  Grupo de servidores
+localhost
+
+[dbservers] # Range de endereços /  Grupo de servidores
+192.168.212.71

@@ -1,0 +1,11 @@
+# INSTALAÇÃO DO ANSIBLE
+
+# 1 - Instalação via Python
+python3 -m pip install --user ansible 
+
+# 2 - Instalação via Apt(Debian/Ubuntu)
+sudo apt install ansible sshpass
+
+# 3 - Instalaçao via yum/dnf(CentOS/Fedora/RedHat)
+dnf install epel-release
+dnf install ansible

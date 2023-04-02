@@ -1,0 +1,10 @@
+##  Teste de ping para os servidores do inventário
+
+# Parametro all utiliza o módulo(-m) ping em todos os grupos do inventário:
+# Parametro -k utilizado para solicitar a senha do usuário em questão:
+ansible -i 2_inventory all -u $USER -k -m ping
+
+
+# O ultimo parametro(webservers) é o nome do grupo de servidores no inventário:
+ansible -i 2_inventory -u $USER -m ping webservers
+ansible -i 2_inventory -u $USER -m ping dbservers

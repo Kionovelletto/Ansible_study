@@ -1,5 +1,5 @@
 # Ansible_study
-Repositório destinado aos estudos no Anbible
+Repositório destinado aos estudos no Ansible.
 
 ![Ansible](https://avatars.githubusercontent.com/u/1507452?s=200&v=4)
 ## Ansbile

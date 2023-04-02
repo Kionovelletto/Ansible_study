@@ -1,5 +1,6 @@
 # Ansible_study
 Repositório destinado aos estudos no Anbible
+
 ![Ansible](https://avatars.githubusercontent.com/u/1507452?s=200&v=4)
 ## Ansbile
 Ansible é um sistema de automação de TI simples. Ele lida com gerenciamento de configuração, implantação de aplicativos, provisionamento de nuvem, execução de tarefas ad hoc, automação de rede e orquestração de vários nós. O Ansible facilita alterações complexas, como atualizações contínuas sem tempo de inatividade com balanceadores de carga. Mais informações no site da Ansible .

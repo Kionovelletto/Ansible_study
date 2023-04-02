@@ -1,0 +1,13 @@
+# Gerenciando pacotes nos servidores remotos:
+# O parametro "-b" é usado para solicitar privilégios de usuário(sudo)
+
+# Criando usuários nos servidores remotos:
+
+# Criando usuários em todos os grupos:
+ansible i 2_inventory.cfg all -u $USER -k -b -m user -a "name=$NAME_NEW_USER"
+
+# Criando usuários em apenas um grupo:
+ansible i 2_inventory.cfg dbservers -u $USER -k -b -m user -a "name=$NAME_NEW_USER"
+
+# Criando usuários em apenas um servidor:
+ansible i 2_inventory.cfg 10.10.0.251 -u $USER -k -b -m user -a "name=$NAME_NEW_USER"

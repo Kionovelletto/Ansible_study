@@ -1,0 +1,38 @@
+---
+- hosts: webservers
+  tasks:
+  - name: Instalando Nginx HTTP Server
+    apt:
+      name: nginx
+      state: latest
+
+  - name: Iniciando o Nginx
+    service:
+      name: nginx
+      state: started
+      enabled: yes
+
+  - name: Liberando regras no firewall
+    ansible.builtin.iptables:
+      chain: INPUT
+      protocol: tcp
+      destination_ports:
+        - "80"
+        - "443"
+      jump: ACCEPT
+
+#   - name: create symlink
+#     file:
+#       src: /etc/nginx/sites-available/static_site.cfg
+#       dest: /etc/nginx/sites-enabled/default
+#       state: link
+#     become: yes
+#   - name: copy the content of the web site
+#     copy:
+#       src: /home/foo/static-site-src/
+#       dest: /home/foo/static-site
+#   - name: restart nginx
+#     service:
+#       name: nginx
+#       state: restarted
+#     become: yes      

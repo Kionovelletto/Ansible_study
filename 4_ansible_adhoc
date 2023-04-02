@@ -1,5 +1,0 @@
-# Gerenciando pacotes remotos:
-ansible -i 2_inventory webservers -u $USER -k -b -m apt -a "name=net-tools stage=latest"
-
-ansible -i 2_inventory all -u $USER -k -b -m apt -a "name=net-tools stage=latest"
-

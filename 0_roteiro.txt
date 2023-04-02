@@ -4,7 +4,7 @@
 1_Install_Ansible.txt
 
 ## Configurando um inventário
-2_inventory
+2_inventory.cfg
 
 ## Validar os acessos SSH do seu host ao servidores cadastrados no inventário
 ssh user@address_inventory
@@ -24,3 +24,6 @@ ansible -i 2_inventory all -u $USER -k -m ping
 
 ## Alguns templates de configuração
 /usr/lib/python3/dist-packages/ansible_test/config
+
+## Instalando e configurando o Nginx pelo playbook:
+ansible-playbook -i inventory.cfg 5_playbook_install_nginx_iptables.yaml -b

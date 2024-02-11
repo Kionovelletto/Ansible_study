@@ -1,0 +1,11 @@
+# Validar configuração de playbook:
+ansible-playbook install_nginx.yml --syntax-check
+
+# Executando o playbook como dry-run:
+ansible-playbook install_nginx.yml -c
+
+# Executando playbook em modo debug(1):
+sudo ansible-playbook -i /etc/ansible/install_nginx.yml playbook.yml -v
+
+# Executando playbook apontando o arquivo de hosts:
+ansible-playbook install_nginx.yml -i hosts.ini

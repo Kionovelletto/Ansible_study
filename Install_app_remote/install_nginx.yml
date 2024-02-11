@@ -1,29 +1,31 @@
 ---
-
-- name: 1 - Criando servidores web
+- name: Configuração dos servidores web
   hosts: webservers
+  become: yes # Executa os comandos como sudo
   tasks:
-    - name: Check ultimate version nginx
+    - name: 1 - Criando servidores web
       apt:
         name: nginx
         state: latest
 
     - name: 2 - Liberando porta 80 no Iptables
-      hosts: webservers
-      tasks:
-        - iptables:
-            chain: INPUT
-            protocol: tcp
-            destination_port: 80
-            source: 
-            jump: ACCEPT
+      iptables:
+        chain: INPUT
+        protocol: tcp
+        destination_port: 80
+        source: 
+        jump: ACCEPT
 
     - name: 3 - Liberando porta 443 no Iptables
-      hosts: webservers
-      tasks:
-        - iptables:
-            chain: INPUT
-            protocol: tcp
-            destination_port: 443
-            source: 
-            jump: ACCEPT
+      iptables:
+        chain: INPUT
+        protocol: tcp
+        destination_port: 443
+        source: 
+        jump: ACCEPT
+
+    - name: 4 - Copiando diretório com HTML para o nginx
+      ansible.builtin.copy:
+        src: ./pages/index.html
+        dest: /var/www/html/
+        follow: no

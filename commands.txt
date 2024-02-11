@@ -9,3 +9,6 @@ sudo ansible-playbook -i /etc/ansible/install_nginx.yml playbook.yml -v
 
 # Executando playbook apontando o arquivo de hosts:
 ansible-playbook install_nginx.yml -i hosts.ini
+
+# Executando o playbook com usuário especifico:
+ansible-playbook install_nginx.yml --user=root -i hosts.ini

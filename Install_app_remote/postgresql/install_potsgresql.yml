@@ -75,7 +75,7 @@
         name: postgresql
         state: restarted
 
-    - name: 14/14 - Liberando porta 5432 no Iptables.
+    - name: 14/15 - Liberando porta 5432 no Iptables.
       ansible.builtin.iptables:
         chain: INPUT
         protocol: tcp

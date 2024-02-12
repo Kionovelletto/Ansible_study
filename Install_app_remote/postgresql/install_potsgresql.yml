@@ -2,76 +2,82 @@
   hosts: pgservers
   become: yes
   tasks:
-    - name: 1/12 - Atualizar a lista de pacotes 
-      become: yes
+
+    - name: 1/15 - Atualizar a lista de pacotes
       ansible.builtin.apt:
         update_cache: yes
 
-    - name: 2/12 - Instalar libpq-dev 
-      become: yes
+    - name: 2/15 - Instalar libpq-dev
       ansible.builtin.apt:
         name: libpq-dev
         state: present
 
-    - name: 3/12 - Instalar psycopg2-binary 
-      become: yes  
+    - name: 3/15 - Instalar psycopg2-binary
       ansible.builtin.pip:
         name: psycopg2-binary
         state: present
 
-    - name: 4/12 - Instalar psycopg2 
-      become: yes  
+    - name: 4/15 - Instalar psycopg2
       ansible.builtin.pip:
         name: psycopg2
         state: present
 
-    - name: 5/12 - Adicionando repositório oficial PG
+    - name: 5/15 - Adicionando repositório oficial PG
       ansible.builtin.apt_repository:
         repo: "deb https://apt.postgresql.org/pub/repos/apt/ {{ansible_distribution_release }}-pgdg main"
         state: present
         filename: pgdg.list
 
-    - name: 6/12 - Importando a chave de assinatura do repositório
+    - name: 6/15 - Importando a chave de assinatura do repositório
       ansible.builtin.apt_key:
         url: "https://www.postgresql.org/media/keys/ACCC4CF8.asc"
         state: present
 
-    - name: 7/12 - Instalando PostgreSQL 16 nos servidores.
-      apt:
-        name: postgresql-16
+    - name: 7/15 - Instalando PostgreSQL 16 nos servidores.
+      ansible.builtin.apt:
+        name: "postgresql-16"
         state: latest
 
-    - name: 8/12 - Criando usuário caio.novelletto SUPERUSER
-      postgresql_user:
-        name: caio.novelletto
-        password: OIUyh3n_bn3l!8an.S
-        role_attr_flags: "CREATEDB,SUPERUSER"
+    - name: 8/15 - Criando usuário caio.novelletto SUPERUSER se não existir
+      ansible.builtin.shell: >
+        su - postgres -c "psql -tc \"SELECT 1 FROM pg_roles WHERE rolname='caio.novelletto'\" | grep -q 1 || createuser --createdb --superuser --encrypted caio.novelletto || alter user \"caio.novelletto\" password '******************'"
 
-    - name: 9/12 - Criando usuário cafecom.build NOSUPERUSER
-      postgresql_user:
-        name: cafecom.build
-        password: KiK0_891.1uiAHSG3_O
-        role_attr_flags: "CREATEDB,NOSUPERUSER"
+    - name: 9/15 - Criando usuário cafecom.build NOSUPERUSER se não existir
+      ansible.builtin.shell: >
+        su - postgres -c "psql -tc \"SELECT 1 FROM pg_roles WHERE rolname='cafecom.build'\" | grep -q 1 || createuser --encrypted cafecom.build || alter user \"cafecom.build\" password '**********'"
 
-    - name: 10/12 - Criando database uat_app
-      postgresql_schema:
-        db: uat_app
-        name: public
-        owner: caio.novelletto
-
-    - name: 11/12 - Liberando acesso via pg_hba para usuário caio.novelletto no database uat_app na rede local
+    - name: 10/15 - Criando database uat_app se não existir
+      ansible.builtin.shell: >
+        su - postgres -c "psql -d uat_app -c 'SELECT 1' || createdb -O caio.novelletto uat_app"
+     
+    - name: 11/15 - Liberando acesso via pg_hba para usuário caio.novelletto no database uat_app na rede local
       postgresql_pg_hba:
-        dest: /var/lib/postgres/data/pg_hba.conf
+        dest: /etc/postgresql/16/main/pg_hba.conf
         contype: host
         users: caio.novelletto
         source: 192.168.2.0/24
         databases: uat_app
         method: password
 
-    - name: 12/12 - Liberando porta 5432 no Iptables.
-      iptables:
+    - name: 12/15 - Ajustando o listen_addresses no postgresql.conf
+      ansible.builtin.lineinfile:
+        path: /etc/postgresql/16/main/postgresql.conf
+        regexp: '^#?listen_addresses.*$'
+        line: 'listen_addresses = "localhost, 192.168.2.0/24"'
+
+    - name: 13/15 Configurando TimeZone
+      community.postgresql.postgresql_set:
+        name: TimeZone
+        value: 'America/Sao_Paulo'
+
+    - name: 14/15 - Reiniciar o serviço PostgreSQL para aplicar as alterações
+      ansible.builtin.service:
+        name: postgresql
+        state: restarted
+
+    - name: 14/14 - Liberando porta 5432 no Iptables.
+      ansible.builtin.iptables:
         chain: INPUT
         protocol: tcp
         destination_port: 5432
-        source: null
         jump: ACCEPT

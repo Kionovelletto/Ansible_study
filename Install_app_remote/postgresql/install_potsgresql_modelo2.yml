@@ -1,0 +1,85 @@
+- name: Configuração dos servidores PostgreSQL
+  hosts: pgservers
+  become: yes
+  tasks:
+    - name: 1/13 - Instalar python3-pip
+      ansible.builtin.apt:
+        name: python3-pip
+        state: present
+
+    - name: 2/13 - Atualizar a lista de pacotes localmente
+      become: yes
+      ansible.builtin.apt:
+        update_cache: yes
+
+    - name: 3/13 - Instalar libpq-dev localmente
+      become: yes
+      ansible.builtin.apt:
+        name: libpq-dev
+        state: present
+
+    - name: 4/13 - Instalar psycopg2-binary localmente
+      become: yes  
+      ansible.builtin.pip:
+        name: psycopg2-binary
+        state: present
+
+    - name: 5/13 - Instalar psycopg2 localmente
+      become: yes  
+      ansible.builtin.pip:
+        name: psycopg2
+        state: present
+
+    - name: 6/13 - Adicionando repositório oficial PG
+      ansible.builtin.apt_repository:
+        repo: "deb https://apt.postgresql.org/pub/repos/apt/ {{ansible_distribution_release }}-pgdg main"
+        state: present
+        filename: pgdg.list
+
+    - name: 7/13 - Importando a chave de assinatura do repositório
+      ansible.builtin.apt_key:
+        url: "https://www.postgresql.org/media/keys/ACCC4CF8.asc"
+        state: present
+
+    - name: 8/13 - Instalando PostgreSQL 16 nos servidores.
+      ansible.builtin.apt:
+        name: postgresql-16
+        state: latest
+
+    - name: 9/13 - Criando usuário caio.novelletto SUPERUSER
+      become_user: postgres
+      postgresql_user:
+        name: caio.novelletto
+        password: OIUyh3n_bn3l!8an.S
+        role_attr_flags: "CREATEDB,SUPERUSER"
+
+    - name: 10/13 - Criando usuário cafecom.build NOSUPERUSER
+      become_user: postgres
+      postgresql_user:
+        name: cafecom.build
+        password: KiK0_891.1uiAHSG3_O
+        role_attr_flags: "CREATEDB,NOSUPERUSER"
+
+    - name: 11/13 - Criando database uat_app
+      become_user: postgres
+      postgresql_schema:
+        db: uat_app
+        name: public
+        owner: caio.novelletto
+
+    - name: 12/13 - Liberando acesso via pg_hba para usuário caio.novelletto no database uat_app na rede local
+      postgresql_pg_hba:
+        dest: /var/lib/postgres/data/pg_hba.conf
+        contype: host
+        users: caio.novelletto
+        source: 192.168.2.0/24
+        databases: uat_app
+        method: password
+
+    - name: 13/13 - Liberando porta 5432 no Iptables.
+      iptables:
+        chain: INPUT
+        protocol: tcp
+        destination_port: 5432
+        source: null
+        jump: ACCEPT

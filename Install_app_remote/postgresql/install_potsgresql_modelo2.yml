@@ -1,3 +1,4 @@
+---
 - name: Configuração dos servidores PostgreSQL
   hosts: pgservers
   become: yes
@@ -43,21 +44,21 @@
 
     - name: 8/13 - Instalando PostgreSQL 16 nos servidores.
       ansible.builtin.apt:
-        name: postgresql-16
+        name: postgresql-{{ postgres_version }}
         state: latest
 
     - name: 9/13 - Criando usuário caio.novelletto SUPERUSER
       become_user: postgres
       postgresql_user:
         name: caio.novelletto
-        password: OIUyh3n_bn3l!8an.S
+        password: *****************
         role_attr_flags: "CREATEDB,SUPERUSER"
 
     - name: 10/13 - Criando usuário cafecom.build NOSUPERUSER
       become_user: postgres
       postgresql_user:
         name: cafecom.build
-        password: KiK0_891.1uiAHSG3_O
+        password: *****************
         role_attr_flags: "CREATEDB,NOSUPERUSER"
 
     - name: 11/13 - Criando database uat_app

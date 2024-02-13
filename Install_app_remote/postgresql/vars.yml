@@ -1,0 +1,11 @@
+---
+postgres_version: "16"
+database_name: "aut_app"
+
+users:
+  - name: "caio.novelletto"
+    password: "lakjYjbg3çnA*Sbn"
+  - name: "cafecom.build"
+    password: "308AliBVASçlkutf3v_Amn3"
+
+network_address: "182.168.2.0/24"

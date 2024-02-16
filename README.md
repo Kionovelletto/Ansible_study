@@ -45,5 +45,6 @@ Instalando e configurando o Nginx no servidores:
 Sources:
 - https://github.com/ansible/ansible
 - https://www.ansible.com/
+- https://docs.ansible.com/ansible/2.9/modules/list_of_all_modules.html
 
 

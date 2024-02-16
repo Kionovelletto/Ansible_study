@@ -12,3 +12,6 @@ ansible-playbook install_nginx.yml -i hosts.ini
 
 # Executando o playbook com usuário especifico:
 ansible-playbook install_nginx.yml --user=root -i hosts.ini
+
+# Executando o playbook com usuário especifico e com as variáveis:
+ansible-playbook install_potsgresql.yml -i hosts.ini --user=root --extra-vars "@vars.yml"
